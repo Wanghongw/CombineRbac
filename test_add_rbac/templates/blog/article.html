@@ -1,0 +1,71 @@
+{% extends 'layout.html' %}
+
+{% load rbac %}
+
+
+{% block content %}
+    <br>
+
+    {% if request|has_permission:'blog:article_add' %}
+
+        <a class="btn btn-success" href="{% url 'blog:article_add' %}">添加文章</a>
+    {% endif %}
+
+    <table class="table-hover table table-bordered">
+        <thead>
+        <tr>
+            <td>文章标题</td>
+            <td>文章分类</td>
+            <td>所属博客</td>
+            <td>创建时间</td>
+            <td>文章内容</td>
+
+            {% if request|has_permission:'blog:article_edit' or request|has_permission:'blog:article_del' %}
+                <td>操作</td>
+            {% endif %}
+
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for article in all_articles %}
+            <tr>
+                <td>
+                    {{ article.title }}
+                </td>
+                <td>
+                    {{ article.get_category_display }}
+                </td>
+                <td>
+                    {{ article.blog.name }}
+                </td>
+                <td>
+                    {{ article.create_at|date:'Y-m-d H:i:s' }}
+                </td>
+                <td>
+                    {{ article.content }}
+
+                    {% if request|has_permission:'blog:article_edit' or request|has_permission:'blog:article_del' %}
+                        <td>
+                            {% if request|has_permission:'blog:article_edit' %}
+                                <a class="btn btn-sm btn-primary" href="{% url 'blog:article_edit' article.pk %}">编辑</a>
+                            {% endif %}
+                            {% if request|has_permission:'blog:article_del' %}
+                                <a class="btn btn-danger btn-sm" href="{% url 'blog:article_del' article.pk %}">删除</a>
+                            {% endif %}
+                        </td>
+                    {% endif %}
+            </tr>
+
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+    {{ ret_html|safe }}
+
+{% endblock content %}
+
+

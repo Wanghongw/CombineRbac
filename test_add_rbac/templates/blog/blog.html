@@ -1,0 +1,52 @@
+{% extends 'layout.html' %}
+
+{% load rbac %}
+
+{% block content %}
+    <br>
+    {% if request|has_permission:'blog:blog_add' %}
+        <a class="btn btn-success" href="{% url 'blog:blog_add' %}">添加博客</a>
+    {% endif %}
+
+    <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <td>博客名称</td>
+            <td>用户名</td>
+            {% if request|has_permission:'blog:blog_edit' or request|has_permission:'blog:blog_del' %}
+                <td>操作</td>
+            {% endif %}
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for blog in all_blogs %}
+            <tr>
+                <td>
+                    {{ blog.name }}
+                </td>
+                <td>
+                    {{ blog.user }}
+                </td>
+
+                {% if request|has_permission:'blog:blog_edit' or request|has_permission:'blog:blog_del' %}
+                    <td>
+                        {% if request|has_permission:'blog:blog_edit' %}
+                            <a class="btn btn-sm btn-primary" href="{% url 'blog:blog_edit' blog.pk %}">编辑</a>
+                        {% endif %}
+                        {% if request|has_permission:'blog:blog_del' %}
+                            <a class="btn btn-danger btn-sm" href="{% url 'blog:blog_del' blog.pk %}">删除</a>
+                        {% endif %}
+                    </td>
+                {% endif %}
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ ret_html|safe }}
+{#    <hr>#}
+
+{% endblock content %}
+
+

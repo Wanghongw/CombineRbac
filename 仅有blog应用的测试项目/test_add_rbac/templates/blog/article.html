@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+
+
+{% block content %}
+    <br>
+
+    <a class="btn btn-success" href="{% url 'blog:article_add' %}">添加文章</a>
+
+    <table class="table-hover table table-bordered">
+        <thead>
+        <tr>
+            <td>文章标题</td>
+            <td>文章分类</td>
+            <td>所属博客</td>
+            <td>创建时间</td>
+            <td>文章内容</td>
+
+            <td>操作</td>
+
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for article in all_articles %}
+            <tr>
+                <td>
+                    {{ article.title }}
+                </td>
+                <td>
+                    {{ article.get_category_display }}
+                </td>
+                <td>
+                    {{ article.blog.name }}
+                </td>
+                <td>
+                    {{ article.create_at|date:'Y-m-d:H' }}
+                </td>
+                <td>
+                    {{ article.content }}
+
+
+                <td>
+                    <a class="btn btn-sm btn-primary" href="{% url 'blog:article_edit' article.pk %}">编辑</a>
+
+                    <a class="btn btn-danger btn-sm" href="{% url 'blog:article_del' article.pk %}">删除</a>
+                </td>
+            </tr>
+
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+    {{ ret_html|safe }}
+
+{% endblock content %}
+
+

@@ -1,0 +1,85 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登陆</title>
+    <link rel="stylesheet" href="{% static 'bootstrap-3.3.7/css/bootstrap.css' %}">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3" style="margin-top: 66px;" >
+            <h2 class="text-center" style="color: red">登陆页面</h2>
+            <br>
+            <div>
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="user">用户名</label>
+            <input type="text" id="user" name="username" class="form-control" placeholder="用户名">
+            <span class="help-block"></span>
+        </div>
+        <div class="form-group">
+            <label for="pwd">密码</label>
+            <input type="password" id="pwd" name="password" class="form-control" placeholder="密码">
+            <span class="help-block"></span>
+        </div>
+
+        <input type="button" class="btn btn-success btn-block" id="login_btn" value="登陆">
+        <span style="color: red;" class="er"></span>
+    </div>
+        </div>
+    </div>
+    <hr>
+<div >
+    用户名：whw 密码:123
+</div>
+</div>
+
+
+
+<script src="{% static 'jquery-3.4.1.js' %}"></script>
+<script src="{% static 'bootstrap-3.3.7/js/bootstrap.js' %}"></script>
+<script>
+
+    var func = function(){
+        $.ajax({
+            url: '{% url "blog:login" %}',
+            type: 'post',
+            data: {
+                //注意这里都要用val()取值！
+                username: $('#user').val(),
+                password: $('#pwd').val(),
+                valid_code:$('#valid_code').val(),
+                csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
+            },
+            success: function (data) {
+                //console.log(data);
+                if(data.code === 1000){
+                    location.href = '{% url "blog:index" %}';
+
+                }else{
+                    $('.er').text(data.msg);
+                }
+            }
+        });
+    };
+
+    //点击登陆按钮
+    $('#login_btn').click(function () {
+        func();
+    });
+
+    //在全局绑定一个敲击回车事件
+       $(document).keypress(function(e) {
+            // 回车键事件
+           if(e.which == 13) {
+                func();
+           }
+       });
+
+</script>
+
+
+</body>
+</html>

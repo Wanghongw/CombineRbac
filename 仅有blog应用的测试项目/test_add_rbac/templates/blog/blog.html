@@ -1,0 +1,44 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <br>
+
+    <a class="btn btn-success" href="{% url 'blog:blog_add' %}">添加博客</a>
+
+
+    <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <td>博客名称</td>
+            <td>用户名</td>
+            <td>操作</td>
+
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for blog in all_blogs %}
+            <tr>
+                <td>
+                    {{ blog.name }}
+                </td>
+                <td>
+                    {{ blog.user }}
+                </td>
+
+                <td>
+
+                    <a class="btn btn-sm btn-primary" href="{% url 'blog:blog_edit' blog.pk %}">编辑</a>
+                    <a class="btn btn-danger btn-sm" href="{% url 'blog:blog_del' blog.pk %}">删除</a>
+                </td>
+
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ ret_html|safe }}
+
+{% endblock content %}
+
+
